@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    string word;
+    Node* next;
+    
+    Node(string w) : word(w), next(nullptr) {}
+};
+
+// Функция для сдвига связного списка на K позиций
+Node* shiftLinkedList(Node* head, int k, int n) {
+    if (!head || k == 0 || k == n) {
+        return head; // Если сдвиг не нужен, возвращаем исходный список
+    }
+    
+    // Найдем последний узел и длину списка
+    Node* current = head;
+    int length = 1;
+    
+    while (current->next) {
+        current = current->next;
+        length++;
+    }
+    
+    // Соединяем конец списка с началом, создавая кольцевой список
+    current->next = head;
+    
+    // Найдем новую голову списка (узел после которого должен идти новый head)
+    int newHeadPosition = n - k % n;
+    Node* newTail = head;
+    
+    for (int i = 1; i < newHeadPosition; i++) {
+        newTail = newTail->next;
+    }
+    
+    // Новая голова
+    Node* newHead = newTail->next;
+    
+    // Разрываем кольцо, чтобы завершить создание нового списка
+    newTail->next = nullptr;
+    
+    return newHead;
+}
+
+// Функция для вывода связного списка
+void printList(Node* head) {
+    Node* current = head;
+    while (current) {
+        cout << current->word << " ";
+        current = current->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    int n, k;
+    cin >> n >> k;
+    
+    
+    string word;
+    cin >> word;
+    Node* head = new Node(word);
+    Node* current = head;
+    
+    for (int i = 1; i < n; i++) {
+        cin >> word;
+        current->next = new Node(word);
+        current = current->next;
+    }
+    
+    
+    head = shiftLinkedList(head, k, n);
+    
+    
+    printList(head);
+    
+    return 0;
+}
